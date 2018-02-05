@@ -1,0 +1,19 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "My sql database project using node.js users can interact with database like an amazon service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dward1502/bamazon.git"
+  },
+  "author": "daniel ward",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dward1502/bamazon/issues"
+  },
+  "homepage": "https://github.com/dward1502/bamazon#readme"
+}
