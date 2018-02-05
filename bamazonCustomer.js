@@ -20,6 +20,7 @@ connection.connect(function(err){
     displayProductList();
 });
 
+
 function displayProductList(){
     let sql = 'SELECT * FROM products WHERE item_id BETWEEN 1 AND 10';
     
@@ -84,8 +85,7 @@ function  updateProducts(unitAmt,existingAmt,productID,unitPrice) {
     console.log("Submitting your order...");
     let newAmt = (existingAmt-unitAmt);
     let customerPrice = (unitAmt * unitPrice);
-    console.log("This is how much you paid for the product $ " + customerPrice);
-    console.log("The amount left of the product " + newAmt);
+    
     connection.query(
         "UPDATE products SET ? WHERE ?",
         [
@@ -101,6 +101,8 @@ function  updateProducts(unitAmt,existingAmt,productID,unitPrice) {
             console.log(res.affectedRows + " Existing amount..")
         }
     );
+    console.log("This is how much you paid for the product $ " + customerPrice);
+    console.log("The amount left of the product " + newAmt);
     connection.end();
 }
 
