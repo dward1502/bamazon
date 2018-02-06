@@ -7,7 +7,7 @@ const connection = mysql.createConnection({
     // Your username
     user: "root",
     // Your password
-    password: "Pointers619!",
+    password: "pointers619!",
     database: "bamazon_DB",
     charset: 'utf8'
 });
@@ -33,11 +33,12 @@ function menu(){
             case "View Products for Sale":
                 console.log("\n Dan's bamazon products for sale : \n");
                 viewProducts();
+                
             break;
             case "View Low Inventory":
                 console.log("\n Dan's bamazon products with low inventory : \n");
                 viewLowInventory();
-
+                
             break;
             case "Add to Inventory":
                 console.log("\n Add more inventory to an existing product in Dan's bamazon products : \n");
@@ -70,7 +71,8 @@ function viewProducts(){
                 console.log("Price : " + res[i].price);
                 console.log("Stock : " + res[i].stock_quantity);
             }
-            connection.end();
+           connection.end();
+          //  menu();
         });
 }
 function viewLowInventory(){
