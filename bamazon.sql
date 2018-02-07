@@ -14,4 +14,4 @@ CREATE TABLE products (
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Surfboard (short)", "Surf gear", 300, 20),("Surfboard (long)", "Surf gear", 500, 12),("Wetsuit","Surf gear", 150, 24),("Bodyboard","Surf gear", 200, 8),("Swim Fins","Surf gear", 60, 10),
-        ("Ethereum", "Crypto", 850.54, 989),("NANO","Crypto", 12.59, 605),("Stellar","Crypto", .76,678),("Snowboard","Snow gear", 325, 32),("Snowboard Boots", "Snow gear",120,26);
+        ("Ethereum", "Crypto", 850.54, 989),("NANO","Crypto", 12.59, 605),("Stellar","Crypto", 0.76,678),("Snowboard","Snow gear", 325, 32),("Snowboard Boots", "Snow gear",120,26);
