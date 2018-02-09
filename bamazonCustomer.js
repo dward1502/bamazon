@@ -1,5 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require('cli-table');
+var Colors = require('colors');
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -11,8 +13,13 @@ const connection = mysql.createConnection({
     database: "bamazon_DB",
     charset: 'utf8'
 });
+//instantiate table 
+// var table = new Table({
+//     head: ['TH ID','TH Product','TH Department','TH Price','TH Stock'],
+//     colWidths:[100,300,300,100,100]
+// });
 
-//connecting to mysqlDB bamazonDB
+//connecting to mysqlDB b/amazonDB
 
 connection.connect(function(err){
     if(err) throw err;
@@ -30,7 +37,10 @@ function displayProductList(){
 
        // console.log(res);
         for(var i = 0; i < res.length ; i ++){
-            console.log("-------------------------")
+            // table.push(
+            //     [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+            // );
+            console.log("\n ========================");
             console.log("ID : " + res[i].item_id);
             console.log("Product : " + res[i].product_name);
             console.log("Department :" + res[i].department_name);
