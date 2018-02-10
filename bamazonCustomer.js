@@ -14,10 +14,10 @@ const connection = mysql.createConnection({
     charset: 'utf8'
 });
 //instantiate table 
-// var table = new Table({
-//     head: ['TH ID','TH Product','TH Department','TH Price','TH Stock'],
-//     colWidths:[100,300,300,100,100]
-// });
+var table = new Table({
+    head: ['ID','Product','Department','Price','Stock'],
+    colWidths:[10,20,20,20,20]
+});
 
 //connecting to mysqlDB b/amazonDB
 
@@ -33,26 +33,20 @@ function displayProductList(){
     
     connection.query(sql, (err,res,cols)=>{
         if(err) throw err;
-        console.log("Items for sale on Dan's bamazon : ");
+        console.log("\nItems for sale on Dan's bamazon : ");
 
-       // console.log(res);
         for(var i = 0; i < res.length ; i ++){
-            // table.push(
-            //     [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
-            // );
-            console.log("\n ========================");
-            console.log("ID : " + res[i].item_id);
-            console.log("Product : " + res[i].product_name);
-            console.log("Department :" + res[i].department_name);
-            console.log("Price : " + res[i].price);
-            console.log("Stock : " + res[i].stock_quantity);
+             table.push(
+                 [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+             );        
         }
+        console.log(table.toString());
         customerChoice();
     });
 }
 
 function customerChoice(){
-    console.log("Time to hand over your money...");
+    console.log("\nTime to hand over your money...");
     inquirer.prompt([{        
         name: "product",        
         message: "What product would you like to buy? Pick an ID below...",
@@ -76,7 +70,7 @@ function searchProducts(productID, unitAmt){
     let sql = "SELECT product_name, stock_quantity, price FROM products WHERE ?";
     
     connection.query(sql, {item_id: productID}, function(err,res){
-        console.log(res);       
+
         let existingAmt = res[0].stock_quantity;
         let unitPrice = res[0].price;
 
@@ -100,19 +94,23 @@ function  updateProducts(unitAmt,existingAmt,productID,unitPrice) {
         "UPDATE products SET ? WHERE ?",
         [
           {
-              stock_quantity: newAmt
+            stock_quantity: newAmt
           },
           {
             item_id: productID
+          },
+          {
+            product_sales: customerPrice
           }
         ], function(err,res){
             if (err) throw err;
-            console.log(" Order has been processed...");
-            console.log(res.affectedRows + " Existing amount..")
+            console.log("=============================")
+            console.log("Order has been processed...");
+            console.log("This is how much you paid for the product $ " + customerPrice);
+            console.log("The amount left of the product " + newAmt);
         }
     );
-    console.log("This is how much you paid for the product $ " + customerPrice);
-    console.log("The amount left of the product " + newAmt);
+    
     connection.end();
 }
 

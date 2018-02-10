@@ -1,5 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require('cli-table');
+
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -12,13 +14,18 @@ const connection = mysql.createConnection({
     charset: 'utf8'
 });
 
+//instantiate table 
+var table = new Table({
+    head: ['ID', 'Product', 'Department', 'Price', 'Stock'],
+    colWidths: [10, 20, 20, 20, 20]
+});
+
 //connecting to mysqlDB bamazonDB
 
 connection.connect(function(err){
     if(err) throw err;
   //  console.log("connected as id : " + connection.thread + "\n");
     menu();
-
 });
 
 function menu(){
@@ -60,19 +67,16 @@ function viewProducts(){
         
         connection.query(sql, (err,res,cols)=>{
             if(err) throw err;
-            console.log("Items for sale on Dan's bamazon : ");
-
-        // console.log(res);
-            for(var i = 0; i < res.length ; i ++){
-                console.log("-------------------------")
-                console.log("ID : " + res[i].item_id);
-                console.log("Product : " + res[i].product_name);
-                console.log("Department :" + res[i].department_name);
-                console.log("Price : " + res[i].price);
-                console.log("Stock : " + res[i].stock_quantity);
+            console.log("\nItems for sale on Dan's bamazon : ");
+            
+            for (var i = 0; i < res.length; i++) {
+                table.push(
+                    [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+                );
             }
-           connection.end();
-          //  menu();
+            console.log(table.toString());
+
+           managerOptions();
         });
 }
 function viewLowInventory(){
@@ -83,7 +87,7 @@ function viewLowInventory(){
             console.log(res[i].product_name);
         }
     });
-    connection.end();
+    managerOptions();
 }
 function addInventory(){
     inquirer.prompt([{
@@ -96,8 +100,11 @@ function addInventory(){
         message: " How many units of the product would you like to add?"
     }
     ]).then(function(answers){
-        let productID = answers.product;
-        let unitAmt = answers.unit;
+        let product = parseInt(answers.product);
+        let unit = parseInt(answers.unit);
+        console.log(unit);
+        let productID = product;
+        let unitAmt = unit;
         let sql = "SELECT product_name, stock_quantity, price FROM products WHERE ?";
         connection.query(sql, {item_id: productID}, function(err, res){
             let existingAmt = res[0].stock_quantity;
@@ -107,7 +114,8 @@ function addInventory(){
     });
 }
 function updateInventory(existingAmt, unitAmt, productID){
-        let newAmt = (existingAmt+unitAmt);        
+        let existing = parseInt(existingAmt);
+        let newAmt = (existing + unitAmt);        
         console.log("This is the existing amount of product ID " + productID + " : " + existingAmt);
         connection.query(
             "UPDATE products SET ? WHERE ?",
@@ -120,12 +128,13 @@ function updateInventory(existingAmt, unitAmt, productID){
             }
             ], function(err,res){
                 if (err) throw err;
-                console.log(" Order has been processed...");
-                console.log(res.affectedRows + " Existing amount..")
+                
+                managerOptions();
             }
         );        
+        console.log(" Order has been processed...");
         console.log("The updated amount left of the product : " + newAmt);
-        connection.end();
+
 }
 function addProduct(){
     console.log(" What type of products would you like to add to Dan's bamazon.");
@@ -142,7 +151,7 @@ function addProduct(){
         name: "stock",
         message: "How many units will you like to have on stock?"
     }
-    ]).then(function(amswers){
+    ]).then(function(answers){
         let product = answers.product;
         let department = answers.department;
         let price = answers.price;
@@ -157,7 +166,21 @@ function addProduct(){
         }, function(err, res){
             console.log( res.affectedRows + " products have been inserted!\n");
             }
-        );
+        )
+        
     });
-    connection.end();
+    
+}
+function managerOptions(){
+    inquirer.prompt([{
+        name: "yes",
+        type: "confirm",
+        message: "Would you like to pick another choice?"
+    }]).then(function(choice){
+        if(choice.yes){
+            menu();
+        }else{
+            connection.end();
+        }
+    });
 }
